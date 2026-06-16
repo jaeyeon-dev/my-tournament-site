@@ -1,0 +1,20 @@
+[
+  {
+    "round": "예선 1경기",
+    "date": "2026-07-01 14:00",
+    "teamA": "A조 1팀",
+    "teamB": "A조 2팀",
+    "scoreA": 2,
+    "scoreB": 1,
+    "status": "종료" 
+  },
+  {
+    "round": "예선 2경기",
+    "date": "2026-07-01 16:00",
+    "teamA": "B조 1팀",
+    "teamB": "B조 2팀",
+    "scoreA": 0,
+    "scoreB": 0,
+    "status": "예정"
+  }
+]
