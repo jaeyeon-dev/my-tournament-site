@@ -7,15 +7,14 @@ import scheduleData from '../../data/schedule.json';
 export default function Home() {
   const [activeTab, setActiveTab] = useState('about'); // about, players, teams, schedule
   
-  // 현재 어떤 플레이어 카드가 클릭되어 열려있는지 ID를 기억하는 상태 변수
-  const [expandedPlayerId, setExpandedPlayerId] = useState(null);
+  // 💡 고유값인 '이름(name)'을 기준으로 카드를 열고 닫도록 변경했습니다.
+  const [expandedPlayerName, setExpandedPlayerName] = useState(null);
 
-  // 카드 클릭 시 열고 닫는 함수
-  const togglePlayerExpand = (id) => {
-    if (expandedPlayerId === id) {
-      setExpandedPlayerId(null); // 이미 열려있는 걸 누르면 닫기
+  const togglePlayerExpand = (name) => {
+    if (expandedPlayerName === name) {
+      setExpandedPlayerName(null); // 이미 열려있는 걸 누르면 닫기
     } else {
-      setExpandedPlayerId(id); // 새로운 걸 누르면 열기
+      setExpandedPlayerName(name); // 새로운 걸 누르면 열기
     }
   };
 
@@ -60,52 +59,37 @@ export default function Home() {
               <p className="text-slate-300 leading-relaxed">본 대회는 내부 역량 강화 및 친목 도모를 위한 e스포츠 대회입니다. 공정한 경기 진행을 위해 아래 규칙을 준수해 주세요.</p>
             </div>
             <hr className="border-slate-700" />
-            {/* 2. 대회 일정 (새로 추가된 영역) */}
             <div>
               <h2 className="text-xl font-bold mb-4 text-indigo-300 flex items-center gap-2">📅 대회 일정</h2>
               <div className="relative border-l-2 border-indigo-500/30 ml-3 pl-6 space-y-5">
-                
-                {/* 일정 항목 1 */}
                 <div className="relative">
                   <div className="absolute -left-[31px] top-1.5 w-3 h-3 rounded-full bg-indigo-500 shadow-[0_0_8px_rgba(99,102,241,0.8)]"></div>
                   <div className="text-xs text-indigo-400 font-semibold">6월 21일 (일)</div>
                   <div className="font-semibold text-slate-200 mt-0.5">참가 신청 마감</div>
                 </div>
-
-                {/* 일정 항목 2 */}
                 <div className="relative">
                   <div className="absolute -left-[31px] top-1.5 w-3 h-3 rounded-full bg-indigo-500 shadow-[0_0_8px_rgba(99,102,241,0.8)]"></div>
                   <div className="text-xs text-indigo-400 font-semibold">6월 27, 28일 (토,일)</div>
                   <div className="font-semibold text-slate-200 mt-0.5">모의내전 진행</div>
                 </div>
-
-                {/* 일정 항목 3 */}
                 <div className="relative">
                   <div className="absolute -left-[31px] top-1.5 w-3 h-3 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]"></div>
                   <div className="text-xs text-emerald-400 font-semibold">6월 29일 (월)</div>
                   <div className="font-semibold text-slate-100 mt-0.5">팀장 선별 및 팀원 경매 진행</div>
                 </div>
-
-                {/* 일정 항목 4 */}
                 <div className="relative">
                   <div className="absolute -left-[31px] top-1.5 w-3 h-3 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]"></div>
                   <div className="text-xs text-emerald-400 font-semibold">7월 4일 (토) 20:00</div>
                   <div className="font-semibold text-slate-100 mt-0.5">조별예선 및 준결승 경기 진행</div>
                 </div>
-
-                {/* 일정 항목 5 */}
                 <div className="relative">
                   <div className="absolute -left-[31px] top-1.5 w-3 h-3 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]"></div>
                   <div className="text-xs text-emerald-400 font-semibold">7월 5일 (일) 20:00</div>
                   <div className="font-semibold text-slate-100 mt-0.5">결승 경기 진행</div>
                 </div>
-
               </div>
             </div>
-            
             <hr className="border-slate-700" />
-            
-            {/* 3. 상금 구조 */}
             <div>
               <h2 className="text-xl font-bold mb-2 text-indigo-300">💰 상금 구조</h2>
               <ul className="list-disc list-inside text-slate-300 space-y-1">
@@ -117,7 +101,7 @@ export default function Home() {
           </section>
         )}
 
-        {/* [참가자 정보 탭] - 클릭 시 아래로 상세 정보 확장 기능 추가 */}
+        {/* [참가자 정보 탭] */}
         {activeTab === 'players' && (
           <section className="bg-slate-800 p-6 rounded-2xl border border-slate-700">
             <div className="flex justify-between items-center mb-4 border-b border-slate-700 pb-2">
@@ -127,13 +111,12 @@ export default function Home() {
             <div className="grid grid-cols-1 gap-4">
               {teamsData.flatMap(team => team.members.map(member => ({...member, teamName: team.teamName})))
                 .map((player, idx) => {
-                  const isExpanded = expandedPlayerId === player.id;
+                  // 💡 고유값 판별을 name으로 매칭하도록 수정했습니다.
+                  const isExpanded = expandedPlayerName === player.name;
                   return (
-                    <div key={player.id || idx} className="border border-slate-700/60 rounded-xl overflow-hidden bg-slate-900/40 transition-all">
-                      
-                      {/* 기본 카드 영역 (클릭하는 곳) */}
+                    <div key={idx} className="border border-slate-700/60 rounded-xl overflow-hidden bg-slate-900/40 transition-all">
                       <div 
-                        onClick={() => togglePlayerExpand(player.id)}
+                        onClick={() => togglePlayerExpand(player.name)}
                         className={`p-4 flex justify-between items-center cursor-pointer hover:bg-slate-800/60 transition-all ${isExpanded ? 'bg-slate-800/40 border-b border-slate-700' : ''}`}
                       >
                         <div>
@@ -152,7 +135,6 @@ export default function Home() {
                         </div>
                       </div>
 
-                      {/* 확장 영역 (조건부 렌더링 + 애니메이션 스타일) */}
                       <div className={`transition-all duration-300 ease-in-out ${isExpanded ? 'max-h-60 p-5 bg-slate-900/20' : 'max-h-0 overflow-hidden'}`}>
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
                           <div className="bg-slate-800/50 p-3 rounded-lg border border-slate-700/40">
@@ -175,7 +157,6 @@ export default function Home() {
                           </div>
                         </div>
                       </div>
-
                     </div>
                   );
               })}
